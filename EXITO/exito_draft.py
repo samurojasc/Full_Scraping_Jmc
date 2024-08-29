@@ -8,18 +8,20 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from tqdm import tqdm
 import re
-
+import openpyxl
+import ssl
 
 # Leer el archivo Excel y obtener las URLs
-excel_filename = 'links.xlsx'  # Nombre del archivo Excel con las URLs
+excel_filename = 'links2.xlsx'  # Nombre del archivo Excel con las URLs
 df_urls = pd.read_excel(excel_filename)  # Leer el archivo Excel, omitiendo la primera fila (encabezados)
 
 # Crear una lista vacía para almacenar los datos extraídos
 data_list = []
 
 # URL base para la solicitud GraphQL
-url_graphql_base = "/api/graphql?operationName=BrowserProductQuery&variables=%7B%22locator%22%3A%5B%7B%22key%22%3A%22id%22%2C%22value%22%3A%22{0}%22%7D%2C%7B%22key%22%3A%22channel%22%2C%22value%22%3A%22%7B%5C%22salesChannel%5C%22%3A%5C%221%5C%22%2C%5C%22regionId%5C%22%3A%5C%22U1cjZXhpdG9jb2w7ZXhpdG9jb2wwOTM%3D%5C%22%7D%22%7D%2C%7B%22key%22%3A%22locale%22%2C%22value%22%3A%22es-CO%22%7D%5D%7D"
-conn = http.client.HTTPSConnection("www.exito.com")
+
+url_graphql_base = "/api/graphql?operationName=BrowserProductQuery&variables=%7B%22locator%22%3A%5B%7B%22key%22%3A%22id%22%2C%22value%22%3A%22{0}%22%7D%2C%7B%22key%22%3A%22channel%22%2C%22value%22%3A%22%7B%5C%22salesChannel%5C%22%3A%5C%221%5C%22%2C%5C%22regionId%5C%22%3A%5C%22U1cjZXhpdG9jb2w7ZXhpdG9jb2wwNjM=%3D%5C%22%7D%22%7D%2C%7B%22key%22%3A%22locale%22%2C%22value%22%3A%22es-CO%22%7D%5D%7D"
+conn = http.client.HTTPSConnection("www.exito.com",context=ssl._create_unverified_context() )
 
 # Iterar sobre las URLs con tqdm para mostrar la barra de progreso
 for url in tqdm(df_urls['LINK'], desc="Procesando URLs"):
@@ -81,6 +83,9 @@ for url in tqdm(df_urls['LINK'], desc="Procesando URLs"):
                 'Precio Promocional': price,
                 'Precio Regular': list_price
             })
+        print({'Url': url,
+                'Precio Promocional': price,
+                'Precio Regular': list_price})
 
         # # Imprimir los datos extraídos del producto
         print('Precio Promocional: ', price,
@@ -96,7 +101,7 @@ for url in tqdm(df_urls['LINK'], desc="Procesando URLs"):
 
 # Guardar el DataFrame con los datos extraídos en un nuevo archivo Excel
 data_df = pd.DataFrame(data_list)
-output_excel_filename = 'exito_0908.xlsx'  # Nombre del archivo Excel de salida
+output_excel_filename = 'exito_pereira_w33.xlsx'  # Nombre del archivo Excel de salida
 data_df.to_excel(output_excel_filename, index=False)  # Guardar el DataFrame en el archivo Excel
 
 # Imprimir un mensaje indicando que los datos se guardaron correctamente

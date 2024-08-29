@@ -16,9 +16,10 @@ df_urls = pd.read_excel(excel_filename)  # Leer el archivo Excel, omitiendo la p
 
 # Crear una lista vacía para almacenar los datos extraídos
 data_list = []
-
+stores = []
 # URL base para la solicitud GraphQL
-url_graphql_base = "/api/graphql?operationName=BrowserProductQuery&variables=%7B%22locator%22%3A%5B%7B%22key%22%3A%22id%22%2C%22value%22%3A%22{0}%22%7D%2C%7B%22key%22%3A%22channel%22%2C%22value%22%3A%22%7B%5C%22salesChannel%5C%22%3A%5C%221%5C%22%2C%5C%22regionId%5C%22%3A%5C%22U1cjZXhpdG9jb2w7ZXhpdG9jb2wwOTM%3D%5C%22%7D%22%7D%2C%7B%22key%22%3A%22locale%22%2C%22value%22%3A%22es-CO%22%7D%5D%7D"
+regionid = 'U1cjZXhpdG9jb2w7ZXhpdG9jb2wwNjM='
+url_graphql_base = "/api/graphql?operationName=BrowserProductQuery&variables=%7B%22locator%22%3A%5B%7B%22key%22%3A%22id%22%2C%22value%22%3A%22{0}%22%7D%2C%7B%22key%22%3A%22channel%22%2C%22value%22%3A%22%7B%5C%22salesChannel%5C%22%3A%5C%221%5C%22%2C%5C%22regionId%5C%22%3A%5C%22U1cjZXhpdG9jb2w7ZXhpdG9jb2wwNjM=%3D%5C%22%7D%22%7D%2C%7B%22key%22%3A%22locale%22%2C%22value%22%3A%22es-CO%22%7D%5D%7D"
 conn = http.client.HTTPSConnection("www.exito.com",context=ssl._create_unverified_context())
 
 # Contador para el número de archivos
@@ -58,7 +59,7 @@ for index, url in enumerate(tqdm(df_urls['LINK'], desc="Procesando URLs")):
         # Realizar la solicitud a la API GraphQL
         response = conn.getresponse()
         data = response.read().decode('utf-8')
-
+        print(data)
         # Convierte la cadena JSON en un diccionario de Python
         data_json = json.loads(data)
 
@@ -100,7 +101,7 @@ for index, url in enumerate(tqdm(df_urls['LINK'], desc="Procesando URLs")):
     # Guardar los datos en un archivo Excel cada 50 URLs
     if (index + 1) % 100 == 0 or (index + 1) == len(df_urls):
         data_df = pd.DataFrame(data_list)
-        output_excel_filename = f'productos_exito_bogota_w26_parte_{file_count}.xlsx'
+        output_excel_filename = f'productos_exito_pereira_w33_parte_{file_count}.xlsx'
         data_df.to_excel(output_excel_filename, index=False)
         print(f'Datos guardados en {output_excel_filename}')
 
