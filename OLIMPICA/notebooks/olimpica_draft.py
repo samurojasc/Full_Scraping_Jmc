@@ -8,7 +8,7 @@ import pandas as pd
 from tqdm import tqdm
 
 # Leer el archivo Excel y obtener las URLs
-excel_filename = 'links-.xlsx'  # Nombre del archivo Excel con las URLs
+excel_filename = '../data/Olímpica._2009xlsx.xlsx'  # Nombre del archivo Excel con las URLs
 df_urls = pd.read_excel(excel_filename)  # Leer el archivo Excel, omitiendo la primera fila (encabezados)
 
 # Crear una lista vacía para almacenar los datos extraídos
@@ -31,9 +31,9 @@ url_graphql_base = (
         "\"variables\":\"{cadena_base64_nueva}\""
     "}}"
 )
-
+print(df_urls.columns)
 # Iterar sobre las URLs con tqdm para mostrar la barra de progreso
-for url in tqdm(df_urls['LINK'], desc="Procesando URLs"):
+for url in tqdm(df_urls['link página web \nen OLIMPICA'], desc="Procesando URLs"):
     # Realizar una solicitud HTTP para obtener el HTML de la página
     response_html = requests.get(url)
     html_content = response_html.content
@@ -96,7 +96,7 @@ for url in tqdm(df_urls['LINK'], desc="Procesando URLs"):
 
 # Guardar el DataFrame con los datos extraídos en un nuevo archivo Excel
 data_df = pd.DataFrame(data_list)
-output_excel_filename = 'productos_olimpica_w17.xlsx'  # Nombre del archivo Excel de salida
+output_excel_filename = '../outputs/Olimpica.xlsx'  # Nombre del archivo Excel de salida
 data_df.to_excel(output_excel_filename, index=False)  # Guardar el DataFrame en el archivo Excel
 
 # Imprimir un mensaje indicando que los datos se guardaron correctamente

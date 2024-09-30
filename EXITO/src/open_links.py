@@ -18,14 +18,15 @@ def process_links(links):
     for index, link in enumerate(links):
         print(f"Abriendo enlace {index + 1} de {len(links)}: {link}")
         driver.get(link)
-        time.sleep(7)
+        if index == 0:
+            time.sleep(8)
 
     driver.quit()
     print("¡Todos los enlaces han sido procesados!")
 
 
 # Leer enlaces del archivo Excel y procesarlos
-df_urls = pd.read_excel('links2.xlsx')
+df_urls = pd.read_excel('links_exito_w37.xlsx')
 links = df_urls['LINK'].tolist()
 
 process_links(links)
